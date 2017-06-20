@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="jQgrid/redmond/jquery-ui-1.8.4.custom.css" rel="stylesheet" />
+    <link href="jQgrid/ui.jqgrid.css" rel="stylesheet" />
+    <script src="jQgrid/jquery-1.4.1.js"></script>     
+    <script src="jQgrid/grid.locale-cn.js"></script>   
+    <script src="jQgrid/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" >
+        $(document).ready(function () {
+
+
+            var tmpArr, QueryString;
+            var URL = document.location.toString(); // 获取带参URL
+            if (URL.lastIndexOf("?") != -1) {
+                QueryString = URL.substring(URL.lastIndexOf("?") + 1, URL.length);
+                tmpArr = QueryString.split("&");// 分离参数
+                for (i = 0; i <= tmpArr.length; i++) {
+                    try { eval(tmpArr[i]); }
+                    catch (e) {
+                        var re = new RegExp("(.*)=(.*)", "ig");
+                        re.exec(tmpArr[i]);
+                        try { eval(RegExp.$1 + "=" + "\"" + RegExp.$2 + "\""); }
+                        catch (e) { }
+                    }
+                }
+            }
+            else {
+                QueryString = "";
+            }
+
+         
+                        jQuery("#list").jqGrid(
+            {
+                url: "GetmachineOEE.ashx?id=" + tmpArr[0],
+                datatype: "json",
+                //shrinkToFit: true, //此屬性可以設置列寬度，不然不會生效
+                autowidth: true,
+                height: 220,                 
+                colNames: ['Equipment_ID', 'Module_ID', 'State', 'Percent', 'Time'],
+                colModel: [
+                             { name: 'Equipment_ID', index: 'Equipment_ID', width: 80, sortable: false },
+                             { name: 'Module_ID', index: 'Module_ID', width: 80, sortable: false },
+                             { name: 'State', index: 'State', width: 80, sortable: false },
+                             { name: 'Percent', index: 'Percent', width: 80, sortable: false },
+                             { name: 'Time', index: 'Time', width: 80, sortable: false }
+                ],
+                rowNum: 10,
+                rowList: [10, 20, 30],
+                mtype: "post",
+                viewrecords: true
+
+            });
+
+        });
+
+    </script>
+
+</head>
+<body>
+   <table id="list">
+   </table>   
+</body>
+</html>

@@ -1,0 +1,27 @@
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\GetCamxDataconsole.exe.config
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\GetCamxDataconsole.exe
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\GetCamxDataconsole.pdb
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\antlr.runtime.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\FiddlerAmfParser.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\FluorineFx.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\log4net.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\Newtonsoft.Json.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Release\StructureMap.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\obj\x86\Release\GetCamxDataconsole.exe
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\obj\x86\Release\GetCamxDataconsole.pdb
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\obj\x86\Release\GetCamxDataconsole.csprojResolveAssemblyReference.cache
+D:\MyWork\OEE\GetCamxData\bin\Release\GetCamxDataconsole.exe.config
+D:\MyWork\OEE\GetCamxData\obj\x86\Release\GetCamxDataconsole.exe
+D:\MyWork\OEE\GetCamxData\obj\x86\Release\GetCamxDataconsole.pdb
+D:\MyWork\OEE\GetCamxData\bin\Release\GetCamxDataconsole.exe
+D:\MyWork\OEE\GetCamxData\bin\Release\GetCamxDataconsole.pdb
+D:\MyWork\OEE\GetCamxData\bin\Release\antlr.runtime.dll
+D:\MyWork\OEE\GetCamxData\bin\Release\FiddlerAmfParser.dll
+D:\MyWork\OEE\GetCamxData\bin\Release\FluorineFx.dll
+D:\MyWork\OEE\GetCamxData\bin\Release\log4net.dll
+D:\MyWork\OEE\GetCamxData\bin\Release\Newtonsoft.Json.dll
+D:\MyWork\OEE\GetCamxData\bin\Release\StructureMap.dll
+D:\MyWork\OEE\GetCamxData\obj\x86\Release\GetCamxDataconsole.csprojResolveAssemblyReference.cache
+D:\Source Code\Jabil_Code\OEE\GetCamxData\bin\Release\GetCamxDataconsole.exe.config
+D:\Source Code\Jabil_Code\OEE\GetCamxData\obj\x86\Release\GetCamxDataconsole.exe
+D:\Source Code\Jabil_Code\OEE\GetCamxData\obj\x86\Release\GetCamxDataconsole.pdb

@@ -1,0 +1,42 @@
+c:\users\1172759\documents\visual studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\bin\OEE DASHBOARD.dll.config
+c:\users\1172759\documents\visual studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\bin\OEE DASHBOARD.dll
+c:\users\1172759\documents\visual studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\bin\OEE DASHBOARD.pdb
+c:\users\1172759\documents\visual studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.dll
+c:\users\1172759\documents\visual studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.pdb
+C:\Users\1172759\Documents\Visual Studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\bin\MySql.Data.dll
+C:\Users\1172759\Documents\Visual Studio 2015\Projects\OEE DASHBOARD\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.csprojResolveAssemblyReference.cache
+E:\fengyubox\Wuxi\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.pdb
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\OEE DASHBOARD.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\OEE DASHBOARD.pdb
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\antlr.runtime.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\FiddlerAmfParser.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\FluorineFx.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\log4net.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\Newtonsoft.Json.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\bin\StructureMap.dll
+E:\fengyubox\Wuxi\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.csprojResolveAssemblyReference.cache
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\OEE DASHBOARD.dll.config
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\OEE DASHBOARD.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\OEE DASHBOARD.pdb
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\antlr.runtime.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\FiddlerAmfParser.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\FluorineFx.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\log4net.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\Newtonsoft.Json.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\StructureMap.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.csprojResolveAssemblyReference.cache
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.dll
+D:\MyWork\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.pdb
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\OEE DASHBOARD.dll.config
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\OEE DASHBOARD.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\OEE DASHBOARD.pdb
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\antlr.runtime.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\FiddlerAmfParser.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\FluorineFx.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\log4net.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\Newtonsoft.Json.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\bin\StructureMap.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.csprojResolveAssemblyReference.cache
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.dll
+D:\Source Code\Jabil_Code\OEE\Hua_OEE\Hua_OEE\OEE DASHBOARD\obj\Debug\OEE DASHBOARD.pdb

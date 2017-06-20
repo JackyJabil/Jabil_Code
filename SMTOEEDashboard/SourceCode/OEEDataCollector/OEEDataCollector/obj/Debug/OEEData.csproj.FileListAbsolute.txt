@@ -1,0 +1,11 @@
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\OEEData.exe.config
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\OEEData.exe
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\OEEData.pdb
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\OEEData.Form1.resources
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\OEEData.Properties.Resources.resources
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\OEEData.csproj.GenerateResource.Cache
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\OEEData.exe
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\OEEData.pdb
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\OEEData\bin\Debug\OEEData.exe.config
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\OEEData\obj\Debug\OEEData.exe
+C:\Users\ShenS61\Desktop\WindowsFormsApplication1\OEEData\obj\Debug\OEEData.pdb

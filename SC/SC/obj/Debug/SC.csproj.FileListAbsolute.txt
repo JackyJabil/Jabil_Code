@@ -1,0 +1,26 @@
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\bin\Debug\SC.exe.config
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\bin\Debug\SC.exe
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\bin\Debug\SC.pdb
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\Interop.SHDocVw.dll
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\SC.csproj.ResolveComReference.cache
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\SC.Form1.resources
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\SC.Properties.Resources.resources
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\SC.csproj.GenerateResource.Cache
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\SC.exe
+D:\WorkSpace\SVN\OEEDashboard\trunk\SC\SC\obj\Debug\SC.pdb
+D:\MyWork\OEE\SC\SC\bin\Debug\SC.exe.config
+D:\MyWork\OEE\SC\SC\obj\Debug\Interop.SHDocVw.dll
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.csproj.ResolveComReference.cache
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.exe
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.pdb
+D:\MyWork\OEE\SC\SC\bin\Debug\SC.exe
+D:\MyWork\OEE\SC\SC\bin\Debug\SC.pdb
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.csprojResolveAssemblyReference.cache
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.Form1.resources
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.Properties.Resources.resources
+D:\MyWork\OEE\SC\SC\obj\Debug\SC.csproj.GenerateResource.Cache
+D:\Source Code\Jabil_Code\OEE\SC\SC\bin\Debug\SC.exe.config
+D:\Source Code\Jabil_Code\OEE\SC\SC\obj\Debug\Interop.SHDocVw.dll
+D:\Source Code\Jabil_Code\OEE\SC\SC\obj\Debug\SC.csproj.ResolveComReference.cache
+D:\Source Code\Jabil_Code\OEE\SC\SC\obj\Debug\SC.exe
+D:\Source Code\Jabil_Code\OEE\SC\SC\obj\Debug\SC.pdb

@@ -1,0 +1,11 @@
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\GetCamxDataconsole.exe.config
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\GetCamxDataconsole.exe
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\GetCamxDataconsole.pdb
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\antlr.runtime.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\FiddlerAmfParser.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\FluorineFx.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\log4net.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\Newtonsoft.Json.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\bin\Debug\StructureMap.dll
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\obj\x86\Debug\GetCamxDataconsole.exe
+E:\fengyubox\GetCamxDataconsole\GetCamxDataconsole\obj\x86\Debug\GetCamxDataconsole.pdb

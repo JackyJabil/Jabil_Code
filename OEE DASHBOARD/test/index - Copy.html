@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>SMT OEE DASHBOARD</title>
+	<meta http-equiv="refresh" content="1000000">
+	<script type="text/javascript" src="amf.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
+<script language="javascript">
+function call()
+{
+	var amfClient = new amf.Client("amfphp", "http://huardcjemsdw01/amfphp/gateway.php");
+    var p = amfClient.invoke("PortalCAMXGetMachineOEE", "getData", ["wuxcamx01",6788,0,"2016-12-29 14:00:00","2016-12-29 15:50:18",0]);
+
+    p.then(
+            function(res) {
+				alert(res[0].OEE);
+			//for(var p in res[0]){  
+			//				 
+			//	alert(p.tostring() + ":" + res[0][p]);
+			//	
+			//};
+            },
+            function(err) {
+				alert("ping errror");
+
+            }
+    );
+};
+
+function calla( myServer, equipID, modID, startTime, endTime, ipc,id)
+{
+	var amfClient = new amf.Client("amfphp", "http://huardcjemsdw01/amfphp/gateway.php");
+    var p = amfClient.invoke("PortalCAMXGetMachineOEE", "getData", [myServer,equipID,modID,startTime,endTime,ipc]);
+
+    p.then(
+            function(res) {
+		//alert(res[0].OEE);
+		document.getElementById(id).innerHTML = "<ul><li>Availability:"+res[0].Availability+"</li>"+"<li>PPM:"+res[0].PPM+"</li>"+"<li>BoardsProduced:"+res[0].BoardsProduced+"</li>"+
+		"<li>Performance:"+res[0].Performance+"</li>"+"<li>BoardsPerPanel:"+res[0].BoardsPerPanel+"</li>"+"<li>Quality:"+res[0].Quality+"</li>"+"<li>Failures:"+res[0].Failures+"</li>"+"<li>OEE:"+res[0].OEE+"</li>"+"</ul>";	
+            },
+            function(err) {
+				alert("ping errrora");
+
+            }
+    );
+};
+
+function message()
+{
+	var today = new Date(); 
+        var day = today.getDate();
+		var day1 =day+1;
+		//alert(day1);
+        var month = today.getMonth() + 1;      
+        var year = today.getFullYear();      
+        var date1 = year + "-" + month + "-" + day+" 07:15:00";   
+		var date2 = year + "-" + month + "-" + day+" 19:15:00"; 
+		//var date2 = year + "-" + month + "-" + day1+" 19:15:00"; 
+
+//alert(date1);
+//alert(date2);
+//$("p1").innerHTML(date1);
+calla("wuxcamx01",6788,0,date1,date2,0,"d1");
+calla("wuxcamx01",8481,0,date1,date2,0,"d2");
+//calla("wuxcamx01",6788,0,"2016-12-29 14:00:00","2016-12-29 15:50:18",0,"d1");
+};
+</script>
+
+</head>
+<body onload="message()">
+<p id="p1" >BAY03-1 今天</p>
+<div id="d1" >
+</div>
+<p id="p2" >BAY03-2 今天</p>
+<div id="d2" >
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\bin\Release\OEEDataReceiver.exe.config
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\bin\Release\OEEDataReceiver.exe
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\bin\Release\OEEDataReceiver.pdb
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\obj\Release\OEEDataReceiver.Form1.resources
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\obj\Release\OEEDataReceiver.Properties.Resources.resources
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\obj\Release\OEEDataReceiver.csproj.GenerateResource.Cache
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\obj\Release\OEEDataReceiver.exe
+C:\Users\ShenS61\Desktop\OEEDataReceiver\OEEDataReceiver\obj\Release\OEEDataReceiver.pdb

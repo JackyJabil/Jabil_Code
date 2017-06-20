@@ -1,0 +1,1947 @@
+﻿//class CAMXCS3
+package 
+{
+    import classescamx.*;
+    import fl.containers.*;
+    import fl.controls.*;
+    import fl.data.*;
+    import flash.display.*;
+    import flash.events.*;
+    import flash.net.*;
+    import flash.text.*;
+    import flash.utils.*;
+    
+    public class CAMXCS3 extends flash.display.MovieClip
+    {
+        public function CAMXCS3()
+        {
+            jabilXML = new XML();
+            xmlLoader = new flash.net.URLLoader();
+            nc = new flash.net.NetConnection();
+            rProductionSErver = new flash.net.Responder(SiProductionServer, NoProductionServer);
+            rManufacturingShifts = new flash.net.Responder(siManufacturingShifts, noManufacturingShifts);
+            month = new Array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
+            rRouteNames = new flash.net.Responder(siRouteNames, noRouteNames);
+            rCurrentStates = new flash.net.Responder(siCurrentStates, noCurrentStates);
+            rEquipmentIcons = new flash.net.Responder(sirEquipmentIcons, norEquipmentIcons);
+            rCS = new flash.net.Responder(SiCS, NoCS);
+            rcycle = new flash.net.Responder(SiCycle, NoCycle);
+            rfi = new flash.net.Responder(SiFI, NoFI);
+            rVR = new flash.net.Responder(SiVR, NoVR);
+            rEF = new flash.net.Responder(SiEF, NoEF);
+            updateTimer = new flash.utils.Timer(delayUpdateTimer);
+            super();
+            addFrameScript(0, frame1);
+            loader_mc.stop();
+            nc.connect(portalServer);
+            nc.addEventListener(flash.events.NetStatusEvent.NET_STATUS, StatusEventHandler);
+            xmlLoader.addEventListener(flash.events.Event.COMPLETE, xmlLoaded);
+            xmlLoader.load(new flash.net.URLRequest("CAMX_Sites.xml"));
+            siteCB.addEventListener(flash.events.Event.CHANGE, ChangeSite);
+            checkW.close.addEventListener(flash.events.MouseEvent.CLICK, CheckClose);
+            checkW.bar.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, CheckDrag);
+            checkW.bar.addEventListener(flash.events.MouseEvent.MOUSE_UP, CheckNodrag);
+            routes_btn.addEventListener(flash.events.MouseEvent.CLICK, ShowCheck);
+            refresh_btn.addEventListener(flash.events.MouseEvent.CLICK, RefreshDetails);
+            checkW.visible = false;
+            zoom.addEventListener(flash.events.Event.CHANGE, ZoomChange);
+            ClearFields();
+            shiftsCB.addEventListener(flash.events.Event.OPEN, UpdateShifts);
+            DisableBtns();
+            __setProp_siteSP_Scene1_Layer3_0();
+            __setProp_zoom_Scene1_Layer2_0();
+            __setProp_routes_btn_Scene1_Layer2_0();
+            __setProp_refresh_btn_Scene1_Layer2_0();
+            return;
+        }
+
+        public function SetEndTime(arg1:String):String
+        {
+            var loc1:*=new Date();
+            pattern = new RegExp(" ", "g");
+            var loc2:*=arg1.replace(pattern, ":");
+            pattern = new RegExp("-", "g");
+            loc2 = loc2.replace(pattern, ":");
+            pattern = new RegExp(":", "g");
+            var loc3:*=loc2.split(pattern);
+            var loc4:*;
+            if ((loc4 = new Date(loc3[0], (loc3[1] - 1), loc3[2], loc3[3], loc3[4], loc3[5])) > loc1) 
+            {
+                arg1 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " " + loc1.getHours() + ":" + loc1.getMinutes() + ":" + loc1.getSeconds();
+            }
+            return arg1;
+        }
+
+        internal function CheckDrag(arg1:flash.events.Event):void
+        {
+            arg1.target.parent.parent.startDrag();
+            return;
+        }
+
+        internal function xmlLoaded(arg1:flash.events.Event):void
+        {
+            var loc2:*=null;
+            DisableBtns();
+            jabilXML = new XML(arg1.target.data);
+            var loc1:*=jabilXML.Site;
+            var loc3:*=0;
+            var loc4:*=loc1;
+            for each (loc2 in loc4) 
+            {
+                siteCB.addItem({"label":loc2.@Name, "value":loc2.@SQL});
+                siteCB.prompt = "Select";
+            }
+            siteCB.enabled = true;
+            return;
+        }
+
+        internal function UpdateShifts(arg1:flash.events.Event):void
+        {
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            var loc5:*=null;
+            var loc6:*=null;
+            var loc7:*=null;
+            var loc8:*=null;
+            var loc1:*=3;
+            while (loc1 < shifts.length) 
+            {
+                pattern = new RegExp(":", "g");
+                loc2 = shifts[loc1].StartTime.split(pattern);
+                loc3 = shifts[loc1].EndTime.split(pattern);
+                loc4 = new Date();
+                loc5 = new Date(loc4.getFullYear(), loc4.getMonth(), loc4.getDate(), loc2[0], loc2[1], loc2[2]);
+                if ((loc6 = new Date(loc4.getFullYear(), loc4.getMonth(), loc4.getDate(), loc3[0], loc3[1], loc3[2])).getTime() <= loc5.getTime()) 
+                {
+                    loc6.setTime(Date.parse(loc6) + 1000 * 60 * 60 * 24);
+                }
+                if (loc5.getTime() >= loc4.getTime()) 
+                {
+                    loc5.setTime(Date.parse(loc5) - 1000 * 60 * 60 * 24);
+                    loc6.setTime(Date.parse(loc6) - 1000 * 60 * 60 * 24);
+                }
+                loc7 = loc5.getFullYear() + "-" + month[loc5.getMonth()] + "-" + DoubleDigitFormat(loc5.getDate()) + " " + shifts[loc1].StartTime;
+                loc8 = loc6.getFullYear() + "-" + month[loc6.getMonth()] + "-" + DoubleDigitFormat(loc6.getDate()) + " " + shifts[loc1].EndTime;
+                shifts[loc1].StartDate = loc7;
+                shifts[loc1].EndDate = loc8;
+                shiftsCB.replaceItemAt({"label":shifts[loc1].Shift + ": " + shifts[loc1].StartDate + " / " + shifts[loc1].EndDate, "value":loc1}, loc1);
+                ++loc1;
+            }
+            return;
+        }
+
+        internal function ChangeSite(arg1:flash.events.Event):void
+        {
+            var loc1:*=null;
+            if (mySite != siteCB.selectedItem.label) 
+            {
+                checkW.visible = false;
+                ClearFields();
+                DisableBtns();
+                loader_mc.play();
+                var loc2:*=0;
+                var loc3:*=maqarray;
+                for each (loc1 in loc3) 
+                {
+                    loc1.Destroy();
+                }
+                maqarray = new Array();
+                shifts = new Array();
+                shiftsCB.removeAll();
+                routes = new Object();
+                states = new Object();
+                equipments = new Object();
+                site = new Object();
+                pf = new TypePF();
+                siteSP.source = pf;
+                zoom.value = 1;
+                updateTimer.reset();
+                updateTimer.removeEventListener(flash.events.TimerEvent.TIMER, UpdateStates);
+                mySite = siteCB.selectedItem.label;
+                myCAMXServer = siteCB.selectedItem.value;
+                state_txt.text = "Looking for" + mySite + " Production Server name...";
+                nc.call("PortalCAMXProductionServer.getData", rProductionSErver, myCAMXServer);
+            }
+            return;
+        }
+
+        internal function SiProductionServer(arg1:Object):void
+        {
+            if (arg1 == null) 
+            {
+                state_txt.text = mySite + ": Production Server name is not set in CAMX database";
+            }
+            else 
+            {
+                pattern = new RegExp("\\[");
+                myProductionServer = arg1[0].ServerName.replace(pattern, "");
+                pattern = new RegExp("\\]");
+                myProductionServer = myProductionServer.replace(pattern, "");
+                state_txt.text = "Looking for" + mySite + " MES shifts...";
+                dgPS.dataProvider = new fl.data.DataProvider(arg1);
+                if (mySite == " STP") 
+                {
+                    nc.call("PortalCAMXGetProductionShifts.getData", rManufacturingShifts, myCAMXServer);
+                }
+                else 
+                {
+                    nc.call("PortalShifts.getData", rManufacturingShifts, myProductionServer);
+                }
+            }
+            return;
+        }
+
+        internal function NoProductionServer(arg1:Object):void
+        {
+            state_txt.text = mySite + " did not response; select another site or refresh browser...";
+            siteCB.enabled = true;
+            loader_mc.stop();
+            return;
+        }
+
+        internal function siManufacturingShifts(arg1:Object):void
+        {
+            var loc1:*=0;
+            if (arg1 == null) 
+            {
+                trace(mySite + " MES shifts do not exist");
+            }
+            else 
+            {
+                shifts[0] = {"Shift":"Default0", "StartTime":"", "EndTime":"", "StartDate":"", "EndDate":""};
+                shiftsCB.addItem({"label":"Default0: 06:00-14:00, 14:00-21:30, 21:30-06:00)", "value":0});
+                shifts[1] = {"Shift":"Default1", "StartTime":"", "EndTime":"", "StartDate":"", "EndDate":""};
+                shiftsCB.addItem({"label":"Default1: 06:00-18:00, 18:00-06:00", "value":1});
+                shifts[1] = {"Shift":"Default2", "StartTime":"", "EndTime":"", "StartDate":"", "EndDate":""};
+                shiftsCB.addItem({"label":"Default2: 06:00-14:00, 14:00-22:00, 22:00-06:00", "value":2});
+                loc1 = 0;
+                while (loc1 < arg1.length) 
+                {
+                    pattern = new RegExp(":000");
+                    arg1[loc1].StartTime = arg1[loc1].StartTime.replace(pattern, "");
+                    arg1[loc1].EndTime = arg1[loc1].EndTime.replace(pattern, "");
+                    shifts.push(arg1[loc1]);
+                    shiftsCB.addItem({"label":arg1[loc1].Shift + ": " + arg1[loc1].StartTime + " / " + arg1[loc1].EndTime, "value":loc1 + 3});
+                    ++loc1;
+                }
+                dgMS.dataProvider = new fl.data.DataProvider(shifts);
+                state_txt.text = "Calling" + mySite + " MES Equipment Routes...";
+                if (mySite == " STP") 
+                {
+                    nc.call("PortalCAMXGetProductionCAMxRoutes.getData", rRouteNames, myCAMXServer);
+                }
+                else 
+                {
+                    nc.call("PortalCAMXEquipmentRoute.getData", rRouteNames, myProductionServer);
+                }
+            }
+            return;
+        }
+
+        internal function noManufacturingShifts(arg1:Object):void
+        {
+            trace("noMS", arg1);
+            siteCB.enabled = true;
+            return;
+        }
+
+        public function DoubleDigitFormat(arg1:uint):String
+        {
+            if (arg1 < 10) 
+            {
+                return "0" + arg1;
+            }
+            return arg1.toString();
+        }
+
+        internal function siRouteNames(arg1:Object):void
+        {
+            var loc1:*=null;
+            var loc2:*=0;
+            var loc3:*=null;
+            var loc4:*=NaN;
+            var loc5:*=0;
+            if (arg1 == null) 
+            {
+                trace(mySite + " Routes do not exist");
+            }
+            else 
+            {
+                arg1.sortOn(["Route", "StepOrder", "Machine", "Language_ID"], [Array.CASEINSENSITIVE, Array.NUMERIC, Array.CASEINSENSITIVE, Array.NUMERIC]);
+                loc2 = 0;
+                do 
+                {
+                    if (arg1[loc2].Language_ID == 0) 
+                    {
+                        ++loc2;
+                    }
+                    else 
+                    {
+                        loc1 = arg1.splice(loc2, 1);
+                    }
+                }
+                while (loc2 < arg1.length);
+                loc5 = 0;
+                if (arg1.length > 1) 
+                {
+                    do 
+                    {
+                        loc3 = arg1[loc5].Route;
+                        loc4 = arg1[loc5].Equipment_ID;
+                        loc2 = loc5 + 1;
+                        do 
+                        {
+                            if (arg1[loc2].Route == loc3 && arg1[loc2].Equipment_ID == loc4) 
+                            {
+                                loc1 = arg1.splice(loc2, 1);
+                            }
+                            else 
+                            {
+                                ++loc2;
+                            }
+                        }
+                        while (loc2 < arg1.length);
+                    }
+                    while (++loc5 < (arg1.length - 1));
+                }
+                routes = arg1;
+                state_txt.text = "Calling" + mySite + " Equipment current states...";
+                nc.call("PortalCAMXGetCurrentMachineState.getData", rCurrentStates, myCAMXServer);
+            }
+            return;
+        }
+
+        internal function noRouteNames(arg1:Object):void
+        {
+            trace("no RouteNames", arg1);
+            siteCB.enabled = true;
+            return;
+        }
+
+        internal function siCurrentStates(arg1:Object):void
+        {
+            var loc1:*=0;
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=NaN;
+            var loc5:*=NaN;
+            var loc6:*=0;
+            var loc7:*=null;
+            var loc8:*=0;
+            var loc9:*=null;
+            if (arg1 == null) 
+            {
+                state_txt.text = mySite + " Machine current states do not exist. Select another site";
+                loader_mc.stop();
+                siteCB.enabled = true;
+            }
+            else 
+            {
+                loc1 = 0;
+                while (loc1 < (arg1.length - 1)) 
+                {
+                    loc2 = arg1[loc1].Equipment_ID;
+                    loc3 = arg1[loc1 + 1].Equipment_ID;
+                    loc4 = arg1[loc1].Module_ID;
+                    loc5 = arg1[loc1 + 1].Module_ID;
+                    if (!(loc2 == loc3) && !(loc5 == 0)) 
+                    {
+                        loc6 = 0;
+                        while (loc6 < loc5) 
+                        {
+                            (loc7 = new Object()).Equipment_ID = arg1[loc1 + 1].Equipment_ID;
+                            loc7.Module_ID = loc6;
+                            loc7.CAMXEquipmentName = "Missing" + loc1 + loc6;
+                            loc7.EventName = "null";
+                            loc7.EventDate = arg1[loc1 + 1].EventDate;
+                            loc7.State = "null";
+                            arg1.push(loc7);
+                            ++loc6;
+                        }
+                        arg1.sortOn(["Equipment_ID", "Module_ID"], [Array.NUMERIC, Array.NUMERIC]);
+                    }
+                    var loc10:*;
+                    loc2 = loc10 = loc3;
+                    if (loc10 && loc5 - loc4 > 1) 
+                    {
+                        loc8 = loc4 + 1;
+                        while (loc8 < loc5) 
+                        {
+                            (loc9 = new Object()).Equipment_ID = arg1[loc1 + 1].Equipment_ID;
+                            loc9.Module_ID = loc8;
+                            loc9.CAMXEquipmentName = "BadConf" + loc1 + loc8;
+                            loc9.EventName = "null";
+                            loc9.EventDate = arg1[loc1 + 1].EventDate;
+                            loc9.State = "null";
+                            arg1.push(loc9);
+                            ++loc8;
+                        }
+                        arg1.sortOn(["Equipment_ID", "Module_ID"], [Array.NUMERIC, Array.NUMERIC]);
+                    }
+                    ++loc1;
+                }
+                states = arg1;
+                state_txt.text = "Calling" + mySite + " Equipment icons...";
+                nc.call("PortalCAMXEquipmentIcons.getData", rEquipmentIcons, myCAMXServer);
+            }
+            return;
+        }
+
+        internal function noCurrentStates(arg1:Object):void
+        {
+            trace("no CurrentStates", arg1);
+            siteCB.enabled = true;
+            return;
+        }
+
+        internal function sirEquipmentIcons(arg1:Object):void
+        {
+            equipments = arg1;
+            MapTables();
+            return;
+        }
+
+        internal function norEquipmentIcons(arg1:Object):void
+        {
+            trace("no EI", arg1);
+            siteCB.enabled = true;
+            return;
+        }
+
+        internal function MapTables():void
+        {
+            var loc4:*=null;
+            var loc5:*=null;
+            var loc6:*=NaN;
+            var loc7:*=null;
+            var loc8:*=0;
+            var loc9:*=null;
+            var loc10:*=null;
+            var loc11:*=null;
+            var loc12:*=null;
+            var loc1:*=new Array();
+            pattern = new RegExp("\\ ", "g");
+            var loc2:*=0;
+            while (loc2 < equipments.length) 
+            {
+                equipments[loc2].Icon = equipments[loc2].Icon.replace(pattern, "");
+                equipments[loc2].MonitorIcon = equipments[loc2].MonitorIcon.replace(pattern, "");
+                equipments[loc2].RouteCount = 0;
+                loc8 = 0;
+                while (loc8 < states.length) 
+                {
+                    if (equipments[loc2].Equipment_ID == states[loc8].Equipment_ID) 
+                    {
+                        loc1.push(equipments[loc2]);
+                        loc1[(loc1.length - 1)].Num = (loc1.length - 1);
+                        break;
+                    }
+                    ++loc8;
+                }
+                ++loc2;
+            }
+            equipments = loc1;
+            var loc3:*=new Array();
+            var loc13:*=0;
+            var loc14:*=routes;
+            for each (loc4 in loc14) 
+            {
+                var loc15:*=0;
+                var loc16:*=equipments;
+                for each (loc9 in loc16) 
+                {
+                    if (loc4.Equipment_ID != loc9.Equipment_ID) 
+                    {
+                        continue;
+                    }
+                    loc9.RouteCount = loc9.RouteCount + 1;
+                    loc3.push(loc4);
+                    loc3[(loc3.length - 1)].Num = (loc3.length - 1);
+                    loc3[(loc3.length - 1)].RefEI = loc9.Num;
+                    loc3[(loc3.length - 1)].MonitorIcon = loc9.MonitorIcon;
+                    loc3[(loc3.length - 1)].Icon = loc9.Icon;
+                    break;
+                }
+            }
+            routes = loc3;
+            loc5 = new Array();
+            loc6 = 0;
+            loc13 = 0;
+            loc14 = routes;
+            for each (loc7 in loc14) 
+            {
+                loc10 = new Array();
+                loc10 = GetStepArray(loc7.Equipment_ID);
+                loc15 = 0;
+                loc16 = loc10;
+                for each (loc11 in loc16) 
+                {
+                    (loc12 = new Object()).Num = loc6;
+                    loc12.Equipment_ID = loc11.Equipment_ID;
+                    loc12.Module_ID = loc11.Module_ID;
+                    loc12.Machine = loc7.Machine;
+                    loc12.CAMXEquipmentName = loc11.CAMXEquipmentName;
+                    loc12.State = loc11.State;
+                    loc12.EventName = loc11.EventName;
+                    loc12.EventDate = loc11.EventDate.date;
+                    loc12.Route = loc7.Route;
+                    loc12.StepOrder = loc7.StepOrder;
+                    loc12.RefEI = loc7.RefEI;
+                    loc12.MonitorIcon = loc7.MonitorIcon;
+                    loc12.Icon = loc7.Icon;
+                    loc12.Cycle = null;
+                    loc12.FeederInterrupts = null;
+                    loc12.VisionRejects = null;
+                    loc12.EmptyFeeders = null;
+                    loc12.CAMXServer = myCAMXServer;
+                    loc12.Click = false;
+                    loc5.push(loc12);
+                    loc6 = loc6 + 1;
+                }
+            }
+            site = loc5;
+            BuildSite();
+            return;
+        }
+
+        internal function GetStepArray(arg1:Number):Array
+        {
+            var loc2:*=null;
+            var loc1:*=new Array();
+            var loc3:*=0;
+            var loc4:*=states;
+            for each (loc2 in loc4) 
+            {
+                if (loc2.Equipment_ID != arg1) 
+                {
+                    continue;
+                }
+                loc1.push(loc2);
+            }
+            return loc1;
+        }
+
+        internal function BuildSite():*
+        {
+            var loc7:*=null;
+            var loc8:*=null;
+            var loc9:*=null;
+            var loc10:*=null;
+            var loc11:*=undefined;
+            var loc12:*=undefined;
+            var loc13:*=undefined;
+            var loc14:*=undefined;
+            var loc15:*=undefined;
+            var loc16:*=undefined;
+            var loc17:*=undefined;
+            var loc18:*=undefined;
+            var loc19:*=undefined;
+            var loc20:*=undefined;
+            pf = new TypePF();
+            checkcontainer = new flash.display.MovieClip();
+            var loc1:*=new String();
+            var loc2:*=0;
+            var loc3:*=new Array();
+            var loc4:*=0;
+            var loc5:*;
+            (loc5 = new fl.controls.CheckBox()).width = 280;
+            loc5.name = "All";
+            loc5.selected = false;
+            loc5.label = "All - slow response";
+            loc5.y = 0;
+            loc5.addEventListener(flash.events.MouseEvent.CLICK, CheckAll);
+            checkcontainer.addChild(loc5);
+            var loc6:*=0;
+            while (loc6 < site.length) 
+            {
+                if (site[loc6].Route != loc1) 
+                {
+                    (loc8 = new classescamx.TypeRoute()).routeName.text = site[loc6].Route;
+                    loc8.x = 10;
+                    loc8.y = loc2;
+                    loc2 = loc2 + incRoute;
+                    pf.addChild(loc8);
+                    loc9 = {"Route":site[loc6].Route, "Num":loc3.length, "Movie":loc8, "Steps":new Array()};
+                    loc3.push(loc9);
+                    (loc10 = new fl.controls.CheckBox()).width = 280;
+                    loc10.label = site[loc6].Route;
+                    loc10.y = loc3.length * 20;
+                    loc10.selected = true;
+                    loc10.name = (loc3.length - 1).toString();
+                    loc10.addEventListener(flash.events.MouseEvent.CLICK, CheckOne);
+                    checkcontainer.addChild(loc10);
+                    loc1 = site[loc6].Route;
+                    loc4 = 0;
+                }
+                if (site[loc6].Module_ID == 0) 
+                {
+                    loc9.Steps.push(site[loc6].RefEI);
+                }
+                var loc21:*=site[loc6].Icon;
+                switch (loc21) 
+                {
+                    case "DEK":
+                    {
+                        (loc11 = new classescamx.TypeDEK(tna)).camx = site[loc6];
+                        loc11.name = site[loc6].Num;
+                        loc11.x = loc4;
+                        loc11.SetState();
+                        loc8.addChild(loc11);
+                        loc4 = loc4 + loc11.width + 5;
+                        maqarray.push(loc11);
+                        break;
+                    }
+                    case "FujiNXT":
+                    {
+                        if (site[loc6].Module_ID == "0") 
+                        {
+                            (loc12 = new classescamx.TypeFujiNXT(tppmain)).camx = site[loc6];
+                            loc12.name = site[loc6].Num;
+                            loc12.x = loc4;
+                            loc12.SetState();
+                            maqarray.push(loc12);
+                            while (site[loc6 + 1].Module_ID != "0") 
+                            {
+                                ++loc6;
+                                (loc13 = new classescamx.TypeFujiNXTModule(tppmodule)).camx = site[loc6];
+                                loc13.name = site[loc6].Num;
+                                loc13.x = loc12.width;
+                                loc13.SetState();
+                                loc12.addChild(loc13);
+                                maqarray.push(loc13);
+                                if (!(loc6 >= (site.length - 1))) 
+                                {
+                                    continue;
+                                }
+                                break;
+                            }
+                            loc4 = loc4 + loc12.width + 5;
+                            loc8.addChild(loc12);
+                        }
+                        break;
+                    }
+                    case "FujiAIM":
+                    {
+                        if (site[loc6].Module_ID == "0") 
+                        {
+                            (loc14 = new classescamx.TypeFujiAIM(tppmain)).camx = site[loc6];
+                            loc14.name = site[loc6].Num;
+                            loc14.x = loc4;
+                            loc14.SetState();
+                            maqarray.push(loc14);
+                            while (site[loc6 + 1].Module_ID != "0") 
+                            {
+                                ++loc6;
+                                (loc15 = new classescamx.TypeFujiAIMModule(tppmodule)).camx = site[loc6];
+                                loc15.name = site[loc6].Num;
+                                loc15.x = loc14.width;
+                                loc15.SetState();
+                                loc14.addChild(loc15);
+                                maqarray.push(loc15);
+                                if (!(loc6 >= (site.length - 1))) 
+                                {
+                                    continue;
+                                }
+                                break;
+                            }
+                            loc4 = loc4 + loc14.width + 5;
+                            loc8.addChild(loc14);
+                        }
+                        break;
+                    }
+                    case "FujiXPF":
+                    {
+                        (loc16 = new classescamx.TypeFujiXPF(tppna)).camx = site[loc6];
+                        loc16.name = site[loc6].Num;
+                        loc16.x = loc4;
+                        loc16.SetState();
+                        loc8.addChild(loc16);
+                        loc4 = loc4 + loc16.width + 5;
+                        maqarray.push(loc16);
+                        break;
+                    }
+                    case "SiemensSX":
+                    {
+                        (loc17 = new classescamx.TypeSiemensSX(tppna)).camx = site[loc6];
+                        loc17.name = site[loc6].Num;
+                        loc17.x = loc4;
+                        loc17.SetState();
+                        loc8.addChild(loc17);
+                        loc4 = loc4 + loc17.width + 5;
+                        maqarray.push(loc17);
+                        break;
+                    }
+                    case "Oven":
+                    {
+                        (loc18 = new classescamx.TypeOven(tna)).camx = site[loc6];
+                        loc18.name = site[loc6].Num;
+                        loc18.x = loc4;
+                        loc18.SetState();
+                        loc8.addChild(loc18);
+                        loc4 = loc4 + loc18.width + 5;
+                        maqarray.push(loc18);
+                        break;
+                    }
+                    case "Tester":
+                    {
+                        (loc19 = new classescamx.TypeTester(tna)).camx = site[loc6];
+                        loc19.name = site[loc6].Num;
+                        loc19.x = loc4;
+                        loc19.SetState();
+                        loc4 = loc4 + loc19.width + 5;
+                        loc8.addChild(loc19);
+                        maqarray.push(loc19);
+                        break;
+                    }
+                    default:
+                    {
+                        (loc20 = new classescamx.TypeNA(tna)).camx = site[loc6];
+                        loc20.name = site[loc6].Num;
+                        loc20.x = loc4;
+                        loc20.SetState();
+                        loc4 = loc4 + loc20.width + 5;
+                        loc8.addChild(loc20);
+                        maqarray.push(loc20);
+                    }
+                }
+                ++loc6;
+            }
+            lastclicked = maqarray[(maqarray.length - 1)];
+            routes = loc3;
+            dgRN.dataProvider = new fl.data.DataProvider(routes);
+            loc21 = 0;
+            var loc22:*=routes;
+            for each (loc7 in loc22) 
+            {
+                loc7.Movie.bar.width = loc7.Movie.width + 300;
+            }
+            displayed = routes.length;
+            siteSP.source = pf;
+            checkW.sp.source = checkcontainer;
+            CheckAll(new flash.events.MouseEvent("CLICK"));
+            checkW.x = 400;
+            checkW.y = 220;
+            checkW.visible = true;
+            updateTimer.addEventListener(flash.events.TimerEvent.TIMER, UpdateStates);
+            updateTimer.stop();
+            called = (equipments.length - 1);
+            answer = called + 1;
+            SiEF(null);
+            return;
+        }
+
+        internal function RefreshDetails(arg1:flash.events.MouseEvent):*
+        {
+            if (displayed > 0) 
+            {
+                updateTimer.reset();
+                refresh_btn.enabled = false;
+                loader_mc.play();
+                routes_btn.enabled = false;
+                shiftsCB.enabled = false;
+                answer = -1;
+                SiCycle(null);
+            }
+            return;
+        }
+
+        internal function UpdateStates(arg1:flash.events.TimerEvent):void
+        {
+            if (displayed > 0) 
+            {
+                answer = -1;
+                updateTimer.reset();
+                refresh_btn.enabled = false;
+                loader_mc.play();
+                state_txt.text = "Updating" + mySite + " Machine States...";
+                currentp = "estados";
+                trace("calling states");
+                nc.call("PortalCAMXGetCurrentMachineState.getData", rCS, myCAMXServer);
+            }
+            return;
+        }
+
+        internal function SiCS(arg1:Object):void
+        {
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            if (arg1 != null) 
+            {
+                var loc5:*=0;
+                var loc6:*=site;
+                for each (loc2 in loc6) 
+                {
+                    var loc7:*=0;
+                    var loc8:*=arg1;
+                    for each (loc3 in loc8) 
+                    {
+                        if (!(loc3.Equipment_ID == loc2.Equipment_ID && loc3.Module_ID == loc2.Module_ID && (!(loc3.EventDate.date == loc2.EventDate) || !(loc3.State == loc2.State)))) 
+                        {
+                            continue;
+                        }
+                        loc2.State = loc3.State;
+                        loc2.EventDate = loc3.EventDate.date;
+                        loc2.EventName = loc3.EventName;
+                        (loc4 = maqarray[loc2.Num]).SetState();
+                        break;
+                    }
+                }
+            }
+            var loc1:*=new Date();
+            SiCycle(null);
+            return;
+        }
+
+        internal function NoCS(arg1:Object):void
+        {
+            trace("no CS", arg1);
+            siteCB.enabled = true;
+            return;
+        }
+
+        internal function SiCycle(arg1:Object):void
+        {
+            var loc1:*=null;
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            var loc5:*=null;
+            if (answer > -1) 
+            {
+                state_txt.text = "Details 1/4: Getting" + mySite + " Machine Cycle Times " + Math.round(answer / called * 100) + "% ...";
+            }
+            else 
+            {
+                state_txt.text = "Details 1/4: Getting" + mySite + " Machine Cycle Times initializing";
+            }
+            if (arg1 != null) 
+            {
+                arg1.sortOn(["Module_ID"], [Array.NUMERIC]);
+                loc1 = new Array();
+                loc1 = GetStepSite(arg1[0].Equipment_ID, -1);
+                var loc6:*=0;
+                var loc7:*=loc1;
+                for each (loc2 in loc7) 
+                {
+                    loc3 = maqarray[loc2.Num];
+                    if (loc2.Module_ID != 0) 
+                    {
+                        var loc8:*=0;
+                        var loc9:*=arg1;
+                        for each (loc4 in loc9) 
+                        {
+                            if (loc4.Module_ID != loc2.Module_ID) 
+                            {
+                                continue;
+                            }
+                            loc2.Cycle = [loc4];
+                            break;
+                        }
+                    }
+                    else 
+                    {
+                        loc2.Cycle = arg1;
+                    }
+                    loc3.SetCycle();
+                }
+            }
+            dgEI.dataProvider = new fl.data.DataProvider(equipments);
+            dgSite.dataProvider = new fl.data.DataProvider(site);
+            answer = answer + 1;
+            if (answer > called) 
+            {
+                answer = -1;
+                SiVR(null);
+            }
+            else 
+            {
+                loc6 = 0;
+                loc7 = site;
+                for each (loc5 in loc7) 
+                {
+                    if (loc5.Equipment_ID != equipments[answer].Equipment_ID) 
+                    {
+                        continue;
+                    }
+                    loc5.Cycle = null;
+                }
+                if (equipments[answer].RouteCount > 0) 
+                {
+                    currentp = "cycle";
+                    nc.call("PortalCAMXGetCurrentMachineModuleCycleTimeMinMaxAvg.getData", rcycle, myCAMXServer, equipments[answer].Equipment_ID, answer);
+                }
+                else 
+                {
+                    SiCycle(null);
+                }
+            }
+            return;
+        }
+
+        internal function NoCycle(arg1:Object):void
+        {
+            trace("noCycle", arg1);
+            return;
+        }
+
+        internal function SiVR(arg1:Object):void
+        {
+            var loc1:*=null;
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            var loc5:*=false;
+            var loc6:*=null;
+            if (answer > -1) 
+            {
+                state_txt.text = "Details 2/4: Getting" + mySite + " Vision Rejects " + Math.round(answer / called * 100) + "% ...";
+            }
+            else 
+            {
+                state_txt.text = "Details 2/4: Getting" + mySite + " Vision Rejects initializing";
+            }
+            if (arg1 != null) 
+            {
+                var loc7:*=0;
+                var loc8:*=site;
+                for each (loc1 in loc8) 
+                {
+                    loc2 = new Array();
+                    var loc9:*=0;
+                    var loc10:*=arg1;
+                    for each (loc3 in loc10) 
+                    {
+                        if (!(loc3.Equipment_ID == loc1.Equipment_ID && loc3.Module_ID == loc1.Module_ID)) 
+                        {
+                            continue;
+                        }
+                        loc2.push(loc3);
+                    }
+                    if (!(loc2.length > 0)) 
+                    {
+                        continue;
+                    }
+                    loc1.VisionRejects = loc2;
+                    (loc4 = maqarray[loc1.Num]).SetVisionRejects();
+                }
+            }
+            dgEI.dataProvider = new fl.data.DataProvider(equipments);
+            dgSite.dataProvider = new fl.data.DataProvider(site);
+            answer = answer + 1;
+            if (answer <= called) 
+            {
+                loc5 = false;
+                loc7 = equipments[answer].MonitorIcon;
+                switch (loc7) 
+                {
+                    case "Pick&Place":
+                    case "pick&place":
+                    {
+                        loc5 = true;
+                        break;
+                    }
+                }
+                loc7 = 0;
+                loc8 = site;
+                for each (loc6 in loc8) 
+                {
+                    if (loc6.Equipment_ID != equipments[answer].Equipment_ID) 
+                    {
+                        continue;
+                    }
+                    loc6.VisionRejects = null;
+                }
+                if (equipments[answer].RouteCount > 0 && loc5) 
+                {
+                    currentp = "vision";
+                    nc.call("PortalCAMXGetCurrentMachineTopVisionErrors.getData", rVR, myCAMXServer, equipments[answer].Equipment_ID, 0, answer);
+                }
+                else 
+                {
+                    SiVR(null);
+                }
+            }
+            else 
+            {
+                answer = -1;
+                SiFI(null);
+            }
+            return;
+        }
+
+        internal function NoVR(arg1:Object):void
+        {
+            trace("no feeder interrupts", arg1);
+            return;
+        }
+
+        internal function SiFI(arg1:Object):void
+        {
+            var loc1:*=null;
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            var loc5:*=false;
+            var loc6:*=null;
+            if (answer > -1) 
+            {
+                state_txt.text = "Details 3/4: Getting" + mySite + " Feeder Interrupts " + Math.round(answer / called * 100) + "% ...";
+            }
+            else 
+            {
+                state_txt.text = "Details 3/4: Getting" + mySite + " Feeder Interrupts initializing";
+            }
+            if (arg1 != null) 
+            {
+                arg1.sortOn(["Hits", "Module_ID"], [Array.DESCENDING | Array.NUMERIC, Array.NUMERIC]);
+                var loc7:*=0;
+                var loc8:*=site;
+                for each (loc1 in loc8) 
+                {
+                    loc2 = maqarray[loc1.Num];
+                    if (loc1.Equipment_ID == arg1[0].Equipment_ID && loc1.Module_ID == 0) 
+                    {
+                        loc1.FeederInterrupts = arg1;
+                        loc2.SetFeederInterrupts();
+                    }
+                    if (!(loc1.Equipment_ID == arg1[0].Equipment_ID && loc1.Module_ID > 0)) 
+                    {
+                        continue;
+                    }
+                    loc3 = new Array();
+                    var loc9:*=0;
+                    var loc10:*=arg1;
+                    for each (loc4 in loc10) 
+                    {
+                        if (loc4.Module_ID != loc1.Module_ID) 
+                        {
+                            continue;
+                        }
+                        loc3.push(loc4);
+                    }
+                    if (!(loc3.length > 0)) 
+                    {
+                        continue;
+                    }
+                    loc1.FeederInterrupts = loc3;
+                    loc2.SetFeederInterrupts();
+                }
+            }
+            dgEI.dataProvider = new fl.data.DataProvider(equipments);
+            dgSite.dataProvider = new fl.data.DataProvider(site);
+            answer = answer + 1;
+            if (answer <= called) 
+            {
+                loc5 = false;
+                loc7 = equipments[answer].MonitorIcon;
+                switch (loc7) 
+                {
+                    case "Pick&Place":
+                    case "pick&place":
+                    {
+                        loc5 = true;
+                        break;
+                    }
+                }
+                loc7 = 0;
+                loc8 = site;
+                for each (loc6 in loc8) 
+                {
+                    if (loc6.Equipment_ID != equipments[answer].Equipment_ID) 
+                    {
+                        continue;
+                    }
+                    loc6.FeederInterrupts = null;
+                }
+                if (equipments[answer].RouteCount > 0 && loc5) 
+                {
+                    currentp = "feeder";
+                    nc.call("PortalCAMXGetCurrentMachineTopFeederErrors.getData", rfi, myCAMXServer, equipments[answer].Equipment_ID, 0, answer);
+                }
+                else 
+                {
+                    SiFI(null);
+                }
+            }
+            else 
+            {
+                answer = -1;
+                SiEF(null);
+            }
+            return;
+        }
+
+        internal function NoFI(arg1:Object):void
+        {
+            trace("no feeder interrupts", arg1);
+            return;
+        }
+
+        internal function SiEF(arg1:Object):void
+        {
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            var loc5:*=null;
+            var loc6:*=false;
+            var loc7:*=undefined;
+            var loc1:*=new Array();
+            if (answer > -1) 
+            {
+                if (answer <= called) 
+                {
+                    state_txt.text = "Details 4/4: Getting" + mySite + " Empty Feeders " + Math.round(answer / called * 100) + "% ...";
+                    loc1 = GetStepSite(equipments[answer].Equipment_ID, -1);
+                }
+            }
+            else 
+            {
+                state_txt.text = "Details 4/4: Getting" + mySite + " Empty Feeders initializing";
+            }
+            var loc8:*=0;
+            var loc9:*=loc1;
+            label393: for each (loc2 in loc9) 
+            {
+                loc3 = maqarray[loc2.Num];
+                if (arg1 != null) 
+                {
+                    loc4 = new Array();
+                    var loc10:*=0;
+                    var loc11:*=arg1;
+                    for each (loc5 in loc11) 
+                    {
+                        if (loc5.Module != loc2.Module_ID) 
+                        {
+                            continue;
+                        }
+                        loc4.push(loc5);
+                    }
+                    if (loc4.length > 0) 
+                    {
+                        loc2.EmptyFeeders = loc4;
+                        loc3.camx.EmptyFeeders = loc4;
+                    }
+                    else 
+                    {
+                        loc2.EmptyFeeders = null;
+                        loc3.camx.EmptyFeeders = null;
+                    }
+                }
+                else 
+                {
+                    loc2.EmptyFeeders = arg1;
+                    loc3.camx.EmptyFeeders = arg1;
+                }
+                loc10 = loc3.camx.MonitorIcon;
+                switch (loc10) 
+                {
+                    case "Pick&Place":
+                    case "pick&place":
+                    {
+                        loc3.SetEmptyFeeders();
+                        continue label393;
+                    }
+                }
+            }
+            dgEI.dataProvider = new fl.data.DataProvider(equipments);
+            dgSite.dataProvider = new fl.data.DataProvider(site);
+            answer = answer + 1;
+            if (answer <= called) 
+            {
+                loc6 = false;
+                loc8 = equipments[answer].MonitorIcon;
+                switch (loc8) 
+                {
+                    case "Pick&Place":
+                    case "pick&place":
+                    {
+                        loc6 = true;
+                        break;
+                    }
+                }
+                if (equipments[answer].RouteCount > 0 && loc6) 
+                {
+                    nc.call("PortalCAMXEmptyFeeders.getData", rEF, myCAMXServer, equipments[answer].Equipment_ID, answer);
+                }
+                else 
+                {
+                    SiEF(null);
+                }
+            }
+            else 
+            {
+                answer = -1;
+                loader_mc.stop();
+                updateTimer.start();
+                EnableBtns();
+                if (displayed > 0) 
+                {
+                    if (lastclicked.camx.Click) 
+                    {
+                        lastclicked.MaqClick(new flash.events.MouseEvent("CLICK"));
+                    }
+                    else 
+                    {
+                        loc7 = new Date();
+                        state_txt.text = "Machine details updated on " + loc7.getFullYear() + "/" + month[loc7.getMonth()] + "/" + DoubleDigitFormat(loc7.getDate()) + " " + DoubleDigitFormat(loc7.getHours()) + ":" + DoubleDigitFormat(loc7.getMinutes()) + ":" + DoubleDigitFormat(loc7.getSeconds());
+                    }
+                }
+                else 
+                {
+                    state_txt.text = "Select a Route...";
+                }
+            }
+            return;
+        }
+
+        internal function NoEF(arg1:Object):void
+        {
+            trace("no feeder interrupts", arg1);
+            return;
+        }
+
+        internal function GetStepSite(arg1:Number, arg2:Number):Array
+        {
+            var loc2:*=null;
+            var loc1:*=new Array();
+            var loc3:*=0;
+            var loc4:*=site;
+            for each (loc2 in loc4) 
+            {
+                if (arg2 == -1) 
+                {
+                    if (loc2.Equipment_ID == arg1) 
+                    {
+                        loc1.push(loc2);
+                    }
+                    continue;
+                }
+                if (!(loc2.Equipment_ID == arg1 && loc2.Module_ID == arg2)) 
+                {
+                    continue;
+                }
+                loc1.push(loc2);
+            }
+            return loc1;
+        }
+
+        internal function ShowCheck(arg1:flash.events.Event):void
+        {
+            if (checkW.visible == false) 
+            {
+                setChildIndex(checkW, (this.numChildren - 1));
+                checkW.x = 400;
+                checkW.y = 220;
+                checkW.visible = true;
+            }
+            return;
+        }
+
+        internal function CheckClose(arg1:flash.events.Event):void
+        {
+            arg1.target.parent.visible = false;
+            return;
+        }
+
+        internal function CheckNodrag(arg1:flash.events.Event):void
+        {
+            arg1.target.parent.stopDrag();
+            return;
+        }
+
+        internal function CheckOne(arg1:flash.events.MouseEvent):void
+        {
+            var loc2:*=null;
+            var loc3:*=NaN;
+            var loc4:*=0;
+            var loc5:*=null;
+            var loc6:*=null;
+            var loc7:*=0;
+            var loc1:*=arg1.target.name;
+            if (arg1.target.selected) 
+            {
+                loc3 = 0;
+                loc4 = 0;
+                while (loc4 < routes.length) 
+                {
+                    if (routes[loc4].Movie.visible) 
+                    {
+                        loc3 = loc3 + 1;
+                    }
+                    ++loc4;
+                }
+                routes[loc1].Movie.visible = true;
+                routes[loc1].Movie.y = incRoute * loc3;
+                var loc8:*=0;
+                var loc9:*=routes[loc1].Steps;
+                for each (loc5 in loc9) 
+                {
+                    equipments[loc5].RouteCount = equipments[loc5].RouteCount + 1;
+                }
+            }
+            else 
+            {
+                routes[loc1].Movie.visible = false;
+                loc8 = 0;
+                loc9 = routes[loc1].Steps;
+                for each (loc6 in loc9) 
+                {
+                    --equipments[loc6].RouteCount;
+                }
+                loc7 = 0;
+                while (loc7 < routes.length) 
+                {
+                    if (routes[loc7].Movie.visible && routes[loc7].Movie.y > routes[loc1].Movie.y) 
+                    {
+                        routes[loc7].Movie.y = routes[loc7].Movie.y - incRoute;
+                    }
+                    ++loc7;
+                }
+                routes[loc1].Movie.y = 0;
+            }
+            displayed = 0;
+            loc8 = 0;
+            loc9 = routes;
+            for each (loc2 in loc9) 
+            {
+                if (!loc2.Movie.visible) 
+                {
+                    continue;
+                }
+                displayed = displayed + 1;
+            }
+            if (displayed > 0) 
+            {
+                state_txt.text = "Details for selected Routes will be updated in next refresh...";
+            }
+            else 
+            {
+                state_txt.text = "Select a Route...";
+            }
+            lastclicked.camx.Click = false;
+            lastclicked.maq.piechart.gotoAndStop(1);
+            ClearFields();
+            dgEI.dataProvider = new fl.data.DataProvider(equipments);
+            siteSP.update();
+            return;
+        }
+
+        internal function CheckAll(arg1:flash.events.MouseEvent):void
+        {
+            var loc1:*=null;
+            var loc2:*=null;
+            var loc3:*=null;
+            var loc4:*=null;
+            var loc5:*=null;
+            var loc6:*=null;
+            var loc7:*=0;
+            var loc8:*=routes;
+            for each (loc1 in loc8) 
+            {
+                loc1.Movie.visible = false;
+                loc1.Movie.y = 0;
+                var loc9:*=0;
+                var loc10:*=loc1.Steps;
+                for each (loc2 in loc10) 
+                {
+                    equipments[loc2].RouteCount = 0;
+                }
+                (loc3 = fl.controls.CheckBox(checkcontainer.getChildByName(loc1.Num))).selected = false;
+            }
+            displayed = 0;
+            state_txt.text = "Select a Route...";
+            lastclicked.camx.Click = false;
+            lastclicked.maq.piechart.gotoAndStop(1);
+            ClearFields();
+            if (arg1.target != null) 
+            {
+                if (arg1.target.selected) 
+                {
+                    loc7 = 0;
+                    loc8 = routes;
+                    for each (loc4 in loc8) 
+                    {
+                        loc4.Movie.visible = true;
+                        loc4.Movie.y = loc4.Num * incRoute;
+                        loc9 = 0;
+                        loc10 = loc4.Steps;
+                        for each (loc5 in loc10) 
+                        {
+                            equipments[loc5].RouteCount = equipments[loc5].RouteCount + 1;
+                        }
+                        (loc6 = fl.controls.CheckBox(checkcontainer.getChildByName(loc4.Num))).selected = true;
+                    }
+                    displayed = routes.length;
+                    state_txt.text = "Details for selected Routes will be updated in next refresh...";
+                }
+            }
+            dgEI.dataProvider = new fl.data.DataProvider(equipments);
+            siteSP.update();
+            return;
+        }
+
+        internal function ZoomChange(arg1:flash.events.Event):void
+        {
+            siteSP.content.scaleX = arg1.target.value;
+            siteSP.content.scaleY = arg1.target.value;
+            siteSP.update();
+            return;
+        }
+
+        internal function StatusEventHandler(arg1:flash.events.NetStatusEvent):void
+        {
+            trace("connected is: " + nc.connected);
+            var loc1:*=currentp;
+            switch (loc1) 
+            {
+                case "estados":
+                {
+                    trace("falla obtencion de estados");
+                    SiCS(null);
+                    break;
+                }
+                case "cycle":
+                {
+                    trace("falla obtencion de tiempos de ciclos");
+                    SiCycle(null);
+                    break;
+                }
+                case "vision":
+                {
+                    trace("falla obtencion de errores de vision");
+                    SiVR(null);
+                    break;
+                }
+                case "feeder":
+                {
+                    trace("falla obtencion de errores de feeders");
+                    SiEF(null);
+                    break;
+                }
+                default:
+                {
+                    trace("añade codigo para caso no previsto");
+                    break;
+                }
+            }
+            return;
+        }
+
+        public function ClearFields():void
+        {
+            mesname.text = "";
+            camxname.text = "";
+            state.text = "";
+            lastevent.text = "";
+            eventtime.text = "";
+            product.text = "";
+            cycletime.text = "";
+            modulestime.text = "";
+            waittime.text = "";
+            percent.b1.scaleX = 0;
+            percent.b2.scaleX = 0;
+            percent.b3.scaleX = 0;
+            percent.b4.scaleX = 0;
+            percent.b5.scaleX = 0;
+            percent.b6.scaleX = 0;
+            percent.b7.scaleX = 0;
+            percent.b8.scaleX = 0;
+            var loc1:*=new fl.data.DataProvider();
+            loc1.addItem({"State":"Executing", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Active", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Starved", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Blocked", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Setup", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Down", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Off", "Percent":"0.00%", "Time":"00:00:00"});
+            loc1.addItem({"State":"Unknown", "Percent":"0.00%", "Time":"00:00:00"});
+            percent.tabla.dataProvider = loc1;
+            oeep.b1.scaleX = 0;
+            oeep.b2.scaleX = 0;
+            oeep.b3.scaleX = 0;
+            oeep.a.text = "0.00%";
+            oeep.p.text = "0.00%";
+            oeep.q.text = "0.00%";
+            oee.nedle.rotation = 0;
+            oee.oeeTxt.text = "0%";
+            utl.bar.scaleX = 0;
+            utl.utltxt.text = "0 %";
+            ppm.text = "";
+            boardsproduced.text = "";
+            failures.text = "";
+            mppm.text = "";
+            fppm.text = "";
+            vppm.text = "";
+            return;
+        }
+
+        public function GetStartTime(arg1:*):String
+        {
+            var loc2:*=null;
+            var loc1:*=new Date();
+            pattern = new RegExp("-", "g");
+            arg1 = arg1.replace(pattern, "/");
+            loc2 = arg1;
+            loc1.setTime(Date.parse(arg1));
+            var loc3:*=loc1.getHours();
+            switch (loc3) 
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                {
+                    loc1.setTime(Date.parse(loc2) - 1000 * 60 * 60 * 8);
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 21:30:00";
+                    break;
+                }
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 06:00:00";
+                    break;
+                }
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 14:00:00";
+                    break;
+                }
+                case 21:
+                {
+                    if (loc1.getMinutes() < 30) 
+                    {
+                        loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 14:00:00";
+                    }
+                    else 
+                    {
+                        loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 21:30:00";
+                    }
+                    break;
+                }
+                case 22:
+                case 23:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 21:30:00";
+                    break;
+                }
+            }
+            return loc2;
+        }
+
+        public function GetStartTime1(arg1:*):String
+        {
+            var loc2:*=null;
+            var loc1:*=new Date();
+            pattern = new RegExp("-", "g");
+            arg1 = arg1.replace(pattern, "/");
+            loc2 = arg1;
+            loc1.setTime(Date.parse(arg1));
+            var loc3:*=loc1.getHours();
+            switch (loc3) 
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                {
+                    loc1.setTime(Date.parse(loc2) - 1000 * 60 * 60 * 8);
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 18:00:00";
+                    break;
+                }
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 06:00:00";
+                    break;
+                }
+                case 18:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 18:00:00";
+                    break;
+                }
+            }
+            return loc2;
+        }
+
+        public function GetStartTime2(arg1:*):String
+        {
+            var loc2:*=null;
+            var loc1:*=new Date();
+            pattern = new RegExp("-", "g");
+            arg1 = arg1.replace(pattern, "/");
+            loc2 = arg1;
+            loc1.setTime(Date.parse(arg1));
+            var loc3:*=loc1.getHours();
+            switch (loc3) 
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                {
+                    loc1.setTime(Date.parse(loc2) - 1000 * 60 * 60 * 8);
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 22:00:00";
+                    break;
+                }
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 06:00:00";
+                    break;
+                }
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                case 21:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 14:00:00";
+                    break;
+                }
+                case 22:
+                case 23:
+                {
+                    loc2 = loc1.getFullYear() + "-" + month[loc1.getMonth()] + "-" + DoubleDigitFormat(loc1.getDate()) + " 22:00:00";
+                    break;
+                }
+            }
+            return loc2;
+        }
+
+        public function EnableBtns():*
+        {
+            siteCB.enabled = true;
+            routes_btn.enabled = true;
+            refresh_btn.enabled = true;
+            zoom.enabled = true;
+            shiftsCB.enabled = true;
+            return;
+        }
+
+        public function DisableBtns():*
+        {
+            siteCB.enabled = false;
+            routes_btn.enabled = false;
+            refresh_btn.enabled = false;
+            zoom.enabled = false;
+            shiftsCB.enabled = false;
+            return;
+        }
+
+        internal function __setProp_siteSP_Scene1_Layer3_0():*
+        {
+            var loc1:*;
+            try 
+            {
+                siteSP["componentInspectorSetting"] = true;
+            }
+            catch (e:Error)
+            {
+            };
+            siteSP.enabled = true;
+            siteSP.horizontalLineScrollSize = 4;
+            siteSP.horizontalPageScrollSize = 0;
+            siteSP.horizontalScrollPolicy = "auto";
+            siteSP.scrollDrag = false;
+            siteSP.source = "";
+            siteSP.verticalLineScrollSize = 16;
+            siteSP.verticalPageScrollSize = 0;
+            siteSP.verticalScrollPolicy = "auto";
+            siteSP.visible = true;
+            try 
+            {
+                siteSP["componentInspectorSetting"] = false;
+            }
+            catch (e:Error)
+            {
+            };
+            return;
+        }
+
+        internal function __setProp_zoom_Scene1_Layer2_0():*
+        {
+            var loc1:*;
+            try 
+            {
+                zoom["componentInspectorSetting"] = true;
+            }
+            catch (e:Error)
+            {
+            };
+            zoom.enabled = true;
+            zoom.maximum = 2;
+            zoom.minimum = 0.02;
+            zoom.stepSize = 0.02;
+            zoom.value = 1;
+            zoom.visible = true;
+            try 
+            {
+                zoom["componentInspectorSetting"] = false;
+            }
+            catch (e:Error)
+            {
+            };
+            return;
+        }
+
+        internal function __setProp_routes_btn_Scene1_Layer2_0():*
+        {
+            var loc1:*;
+            try 
+            {
+                routes_btn["componentInspectorSetting"] = true;
+            }
+            catch (e:Error)
+            {
+            };
+            routes_btn.emphasized = false;
+            routes_btn.enabled = true;
+            routes_btn.label = "Routes";
+            routes_btn.labelPlacement = "right";
+            routes_btn.selected = false;
+            routes_btn.toggle = false;
+            routes_btn.visible = true;
+            try 
+            {
+                routes_btn["componentInspectorSetting"] = false;
+            }
+            catch (e:Error)
+            {
+            };
+            return;
+        }
+
+        internal function __setProp_refresh_btn_Scene1_Layer2_0():*
+        {
+            var loc1:*;
+            try 
+            {
+                refresh_btn["componentInspectorSetting"] = true;
+            }
+            catch (e:Error)
+            {
+            };
+            refresh_btn.emphasized = false;
+            refresh_btn.enabled = true;
+            refresh_btn.label = "Refresh Details";
+            refresh_btn.labelPlacement = "right";
+            refresh_btn.selected = false;
+            refresh_btn.toggle = false;
+            refresh_btn.visible = true;
+            try 
+            {
+                refresh_btn["componentInspectorSetting"] = false;
+            }
+            catch (e:Error)
+            {
+            };
+            return;
+        }
+
+        internal function frame1():*
+        {
+            stop();
+            return;
+        }
+
+        internal var rProductionSErver:flash.net.Responder;
+
+        internal var rManufacturingShifts:flash.net.Responder;
+
+        internal var month:Array;
+
+        internal var rRouteNames:flash.net.Responder;
+
+        internal var rCurrentStates:flash.net.Responder;
+
+        internal var rEquipmentIcons:flash.net.Responder;
+
+        public var shifts:Array;
+
+        internal var routes:Object;
+
+        internal var states:Object;
+
+        internal var equipments:Object;
+
+        internal var site:Object;
+
+        internal var pf:TypePF;
+
+        internal var incRoute:Number=485;
+
+        public var product:flash.text.TextField;
+
+        internal var called:Number;
+
+        internal var answer:Number=-1;
+
+        internal var rCS:flash.net.Responder;
+
+        internal var rcycle:flash.net.Responder;
+
+        internal var rfi:flash.net.Responder;
+
+        internal var rVR:flash.net.Responder;
+
+        internal var rEF:flash.net.Responder;
+
+        internal var maqarray:Array;
+
+        public var delayUpdateTimer:Number=30000;
+
+        public var updateTimer:flash.utils.Timer;
+
+        public var lastclicked:flash.display.MovieClip;
+
+        internal var displayed:Number=0;
+
+        public var currentp:String;
+
+        public var routes_btn:fl.controls.Button;
+
+        public var cycletime:flash.text.TextField;
+
+        internal var checkcontainer:flash.display.MovieClip;
+
+        public var dgSite:fl.controls.DataGrid;
+
+        public var mesname:flash.text.TextField;
+
+        public var dgMS:fl.controls.DataGrid;
+
+        public var fppm:flash.text.TextField;
+
+        public var dgEI2:fl.controls.DataGrid;
+
+        public var vppm:flash.text.TextField;
+
+        public var dgCS:fl.controls.DataGrid;
+
+        public var dgPS:fl.controls.DataGrid;
+
+        public var eventtime:flash.text.TextField;
+
+        public var state:flash.text.TextField;
+
+        public var tna:flash.display.MovieClip;
+
+        public var tppna:flash.display.MovieClip;
+
+        public var utl:flash.display.MovieClip;
+
+        public var oee:flash.display.MovieClip;
+
+        public var dgRN2:fl.controls.DataGrid;
+
+        public var modulestime:flash.text.TextField;
+
+        public var state_txt:flash.text.TextField;
+
+        public var tppmain:flash.display.MovieClip;
+
+        public var tppmodule:flash.display.MovieClip;
+
+        public var refresh_btn:fl.controls.Button;
+
+        public var ppm:flash.text.TextField;
+
+        public var loader_mc:flash.display.MovieClip;
+
+        public var zoom:fl.controls.NumericStepper;
+
+        public var failures:flash.text.TextField;
+
+        public var siteSP:fl.containers.ScrollPane;
+
+        public var checkW:flash.display.MovieClip;
+
+        public var mppm:flash.text.TextField;
+
+        public var siteCB:fl.controls.ComboBox;
+
+        public var percent:flash.display.MovieClip;
+
+        public var dgRL:fl.controls.DataGrid;
+
+        internal var myCAMXServer:String;
+
+        public var boardsproduced:flash.text.TextField;
+
+        public var ibg:flash.display.MovieClip;
+
+        public var lastevent:flash.text.TextField;
+
+        public var dgRN:fl.controls.DataGrid;
+
+        public var camxname:flash.text.TextField;
+
+        public var shiftsCB:fl.controls.ComboBox;
+
+        public var dgEI:fl.controls.DataGrid;
+
+        public var oeep:flash.display.MovieClip;
+
+        public var waittime:flash.text.TextField;
+
+        internal var jabilXML:XML;
+
+        internal var xmlLoader:flash.net.URLLoader;
+
+        internal var mySite:String;
+
+        public var portalServer:String="http://HUARDCJEMSDW01/amfphp/gateway.php";
+
+        internal var nc:flash.net.NetConnection;
+
+        internal var myProductionServer:String="";
+
+        internal var pattern:RegExp;
+    }
+}
+
+

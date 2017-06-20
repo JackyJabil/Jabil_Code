@@ -1,0 +1,11 @@
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\bin\Release\OEEDataCollector.exe.config
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\bin\Release\OEEDataCollector.exe
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\bin\Release\OEEDataCollector.pdb
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.Form1.resources
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.Properties.Resources.resources
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.csproj.GenerateResource.Cache
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.exe
+C:\Users\ShenS61\Desktop\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.pdb
+D:\Source Code\Jabil_Code\OEE\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\bin\Release\OEEDataCollector.exe.config
+D:\Source Code\Jabil_Code\OEE\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.exe
+D:\Source Code\Jabil_Code\OEE\SMTOEEDashboard\SourceCode\OEEDataCollector\OEEDataCollector\obj\Release\OEEDataCollector.pdb
